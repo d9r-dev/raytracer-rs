@@ -73,19 +73,6 @@ fn ray_color(ray: &ray::Ray, world: &Vec<Box<dyn Hittable>>) -> Color {
     Color::new(1.0, 1.0, 1.0) * (1.0 - a) + Color::new(0.5, 0.7, 1.0) * a
 }
 
-fn hit_sphere(center: &Point3, radius: f64, ray: &Ray) -> f64 {
-    let oc = center - ray.origin;
-    let a = ray.direction.length_squared();
-    let h = ray.direction.dot(oc);
-    let c = oc.length_squared() - radius * radius;
-    let dis = h * h - a * c;
-    if dis < 0.0 {
-        -1.0
-    } else {
-        (-h - dis.sqrt()) / (2.0 * a)
-    }
-}
-
 fn degrees_to_radians(degrees: f64) -> f64 {
     degrees * std::f64::consts::PI / 180.0
 }
