@@ -4,8 +4,7 @@ mod ray;
 mod vec;
 mod interval;
 mod camera;
-
-use std::f64;
+mod util;
 
 use vec::Vec3;
 
@@ -24,6 +23,3 @@ fn main() {
     camera.render(&world);
 }
 
-fn degrees_to_radians(degrees: f64) -> f64 {
-    degrees * std::f64::consts::PI / 180.0
-}
