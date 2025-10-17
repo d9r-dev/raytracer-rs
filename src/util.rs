@@ -7,5 +7,5 @@ pub fn random_f64() -> f64 {
 }
 
 pub fn random_f64_minmax(min: f64, max: f64) -> f64 {
-    min + (min - max) * random_f64()
+    min + (max - min) * random_f64()
 }

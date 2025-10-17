@@ -1,7 +1,8 @@
 use std::{
-    fmt::Display,
-    ops::{Add, Div, Mul, Neg, Sub},
+    fmt::Display, ops::{Add, Div, Mul, Neg, Sub}
 };
+
+use crate::util::{random_f64, random_f64_minmax};
 
 #[derive(Clone, Copy)]
 pub struct Vec3 {
@@ -41,6 +42,33 @@ impl Vec3 {
             x: self.x / len,
             y: self.y / len,
             z: self.z / len,
+        }
+    }
+
+    pub fn random() -> Vec3 {
+        Vec3::new(random_f64(), random_f64(), random_f64())
+    }
+
+    pub fn random_minmax(min: f64, max: f64) -> Vec3 {
+        Vec3::new(random_f64_minmax(min, max), random_f64_minmax(min, max), random_f64_minmax(min, max))
+    }
+
+    pub fn random_unitvector() -> Vec3 {
+        loop {
+            let p = Vec3::random_minmax(-1.0, 1.0);
+            let lensq = p.length_squared();
+            if 1e-160 < lensq && lensq <= 1.0 {
+                return p / lensq.sqrt();
+            }
+        }
+    }
+
+    pub fn random_on_hemisphere(normal: &Vec3) -> Vec3 {
+        let in_unit_sphere = Vec3::random_unitvector();
+        if in_unit_sphere.dot(*normal) > 0.0 {
+            in_unit_sphere
+        } else {
+            -in_unit_sphere
         }
     }
 }
