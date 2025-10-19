@@ -1,4 +1,6 @@
-use crate::{Point3, ray::Ray, vec::Vec3, interval::Interval};
+use std::rc::Rc;
+
+use crate::{Point3, ray::Ray, vec::Vec3, interval::Interval, material::Material};
 
 pub trait Hittable {
     fn hit(&self, ray: &Ray, ray_t: Interval) -> Option<HitRecord>;
@@ -9,15 +11,17 @@ pub struct HitRecord {
     pub normal: Vec3,
     pub t: f64,
     pub front_face: Option<bool>,
+    pub material: Rc<dyn Material>,
 }
 
 impl HitRecord {
-    pub fn new(point: Point3, normal: Vec3, t: f64) -> Self {
+    pub fn new(point: Point3, normal: Vec3, t: f64, material: Rc<dyn Material>) -> Self {
         Self {
             point,
             normal,
             t,
             front_face: None,
+            material,
         }
     }
 
@@ -34,13 +38,15 @@ impl HitRecord {
 pub struct Sphere {
     pub center: Point3,
     pub radius: f64,
+    pub material: Rc<dyn Material>,
 }
 
 impl Sphere {
-    pub fn new(center: Point3, radius: f64) -> Self {
+    pub fn new(center: Point3, radius: f64, material: Rc<dyn Material>) -> Self {
         Self {
             center,
             radius: radius.max(0.0),
+            material,
         }
     }
 }
@@ -64,7 +70,7 @@ impl Hittable for Sphere {
 
         let p = ray.at(root);
         let normal = (p - self.center) / self.radius;
-        let mut record = HitRecord::new(p, normal, root);
+        let mut record = HitRecord::new(p, normal, root, self.material.clone());
         record.set_face_normal(ray, normal);
 
         Some(record)
