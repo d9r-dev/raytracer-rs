@@ -63,9 +63,12 @@ impl Hittable for Sphere {
         }
 
         let sqrtd = dis.sqrt();
-        let root = (h - sqrtd) / a;
+        let mut root = (h - sqrtd) / a;
         if !ray_t.surrounds(root) {
-            return None;
+            root = (h + sqrtd) / a;
+            if !ray_t.surrounds(root) {
+                return None;
+            }
         }
 
         let p = ray.at(root);
